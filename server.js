@@ -1,10 +1,6 @@
 'use strict';
 
-const { json } = require("express/lib/response");
-const fs = require("fs");
-const read = fs.readFileSync("./Movie Data/data.json");
-console.log(JSON.parse(read));
-const movieData = JSON.parse(read)
+const movieData = require("./Movie Data/data.json");
 
 function ResData(title,poster_path,overview)
 {
@@ -28,7 +24,7 @@ server.listen(PORT, () =>{
 
 // http://localhost:3000/
 server.get('/',(req,res)=>{
-res.status(200).send(new ResData(movieData.title,movieData.poster_path,movieData.overview));
+res.send(new ResData(movieData.title,movieData.poster_path,movieData.overview));
 
 })
 
