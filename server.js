@@ -32,17 +32,21 @@ const server = express();
 //import cors
 const cors = require('cors');
 server.use(cors());
+server.use(express.json());
 // import axios
 const axios = require('axios');
 //import .env
 require('dotenv').config();
+//1. importing the pg
+const pg = require('pg'); 
 
+
+//2. create obj from Client
+const client = new pg.Client(process.env.DATABASE_URL);
 
 const PORT = 3000;
 
-server.listen(PORT, () => {
-    console.log(`listening on ${PORT} : The Server is ready`);
-})
+
 
 // http://localhost:3000/
 server.get('/', homePage)
@@ -57,6 +61,9 @@ server.get('/search', searchPage)
 server.get('/top', topRatedMovies)
 // http://localhost:3000/populer
 server.get('/populer', populerMedia)
+
+server.get('/myMovies',getMyMovies)
+server.post('/myMovies',addMyMovies)
 //any page that doesn't belong to our server
 server.get('*', errorHandler404)
 server.use(errorHandler500)
@@ -191,6 +198,36 @@ function populerMedia(req,res){
 
 //..........................................................................................................
 
+function getMyMovies(req,res){
+    // return all fav movies (my_movies tabel content)
+    const sql = `SELECT * FROM my_movies`;
+    client.query(sql)
+    .then((data)=>{
+        res.send(data.rows);
+    })
+    .catch((err)=>{
+        errorHandler500(err,req,res);
+    })
+}
+
+function addMyMovies(req,res){
+    const movie = req.body; //by default we cant see the body content
+    console.log(movie);
+    const sql = `INSERT INTO my_movies (title, vote_average, summary,media_type) VALUES ($1,$2,$3,$4) RETURNING *;`
+    const values = [movie.title, movie.vote_average, movie.summary,movie.media_type];
+    console.log(sql);
+
+    client.query(sql,values)
+    .then((data) => {
+        res.send("your data was added !");
+    })
+        .catch(error => {
+            // console.log(error);
+           // errorHandler(error, req, res);
+           errorHandler500(error,req,res);
+        });
+}
+
 
 //middleware function
 function errorHandler500(erorr, req, res) {
@@ -208,3 +245,10 @@ function errorHandler404(req, res) {
     }
     res.status(404).send(err);
 }
+
+client.connect()
+.then(()=>{
+    server.listen(PORT, () => {
+        console.log(`listening on ${PORT} : I am ready`);
+    });  
+})

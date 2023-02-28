@@ -4,7 +4,7 @@
 
 ## WRRC
 
-![Alt text](./images/API.jpg "WRRC")
+![Alt text](./images/database.jpg "WRRC")
 
 ## Overview
 
