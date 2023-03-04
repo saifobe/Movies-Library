@@ -12,8 +12,9 @@
 
 
 ## Project Features
+
 ### My raouts
- http://localhost:3000/
+ http://localhost:3000/ (Main Route)
 
  http://localhost:3000/favorite
 
