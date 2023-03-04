@@ -32,7 +32,10 @@ const server = express();
 //import cors
 const cors = require('cors');
 server.use(cors());
-server.use(express.json());
+
+
+server.use(express.json()); //middleware function to be able to read body content 
+
 // import axios
 const axios = require('axios');
 //import .env
@@ -61,9 +64,13 @@ server.get('/search', searchPage)
 server.get('/top', topRatedMovies)
 // http://localhost:3000/populer
 server.get('/populer', populerMedia)
-
+// http://localhost:3000/myMovies
 server.get('/myMovies',getMyMovies)
 server.post('/myMovies',addMyMovies)
+// http://localhost:3000/myMovies/:id
+server.delete('/myMovies/:id',deleteMovie)
+server.put('/myMovies/:id',updateMovie)
+server.get('/myMovies/:id',getSpicificMovie)
 //any page that doesn't belong to our server
 server.get('*', errorHandler404)
 server.use(errorHandler500)
@@ -228,6 +235,42 @@ function addMyMovies(req,res){
         });
 }
 
+function deleteMovie(req,res){
+    const id = req.params.id;
+    const sql = `DELETE FROM my_movies WHERE id=${id}`;
+    client.query(sql)
+    .then((data)=>{
+        res.status(204).json({});
+    })
+    .catch((err)=>{
+        errorHandler500(err,req,res);
+    })
+}
+
+function updateMovie(req,res) {
+    const id = req.params.id;
+    const sql = `UPDATE my_movies  SET title=$1, vote_average=$2, summary=$3, media_type=$4 WHERE id=${id} RETURNING *`;
+    const values = [req.body.title,req.body.vote_average,req.body.summary,req.body.media_type];
+    client.query(sql,values)
+    .then((data)=>{
+        res.status(200).send(data.rows);
+    })
+    .catch((err)=>{
+        errorHandler500(err,req,res);
+    })
+}
+
+function getSpicificMovie(req,res){
+    const id = req.params.id;
+    const sql = `SELECT * FROM my_movies WHERE id=${id}`;
+    client.query(sql)
+    .then((data)=>{
+        res.send(data.rows);
+    })
+    .catch((err)=>{
+        errorHandler500(err,req,res);
+    })
+}
 
 //middleware function
 function errorHandler500(erorr, req, res) {

@@ -12,4 +12,17 @@
 
 
 ## Project Features
-<!-- What are the features included in you app -->
+### My raouts
+ http://localhost:3000/
+
+ http://localhost:3000/favorite
+
+http://localhost:3000/search
+
+http://localhost:3000/top
+
+http://localhost:3000/populer
+
+http://localhost:3000/myMovies
+
+http://localhost:3000/myMovies/:id
