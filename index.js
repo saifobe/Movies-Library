@@ -289,12 +289,9 @@ function errorHandler404(req, res) {
     res.status(404).send(err);
 }
 
-// client.connect()
-// .then(()=>{
-//     server.listen(PORT, () => {
-//         console.log(`listening on ${PORT} : I am ready`);
-//     });  
-// })
-server.listen(PORT, () => {
-          console.log(`listening on ${PORT} : I am ready`);
-      });  
+client.connect()
+.then(()=>{
+    server.listen(PORT, () => {
+        console.log(`listening on ${PORT} : I am ready`);
+    });  
+})
