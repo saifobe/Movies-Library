@@ -47,7 +47,7 @@ const pg = require('pg');
 //2. create obj from Client
 const client = new pg.Client(process.env.DATABASE_URL);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 
 
@@ -289,9 +289,12 @@ function errorHandler404(req, res) {
     res.status(404).send(err);
 }
 
-client.connect()
-.then(()=>{
-    server.listen(PORT, () => {
-        console.log(`listening on ${PORT} : I am ready`);
-    });  
-})
+// client.connect()
+// .then(()=>{
+//     server.listen(PORT, () => {
+//         console.log(`listening on ${PORT} : I am ready`);
+//     });  
+// })
+server.listen(PORT, () => {
+          console.log(`listening on ${PORT} : I am ready`);
+      });  
