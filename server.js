@@ -47,7 +47,7 @@ const pg = require('pg');
 //2. create obj from Client
 const client = new pg.Client(process.env.DATABASE_URL);
 
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 
 
