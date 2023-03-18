@@ -220,8 +220,8 @@ function getMyMovies(req,res){
 function addMyMovies(req,res){
     const movie = req.body; //by default we cant see the body content
     console.log(movie);
-    const sql = `INSERT INTO my_movies (title, vote_average, summary,media_type) VALUES ($1,$2,$3,$4) RETURNING *;`
-    const values = [movie.title, movie.vote_average, movie.summary,movie.media_type];
+    const sql = `INSERT INTO my_movies (title, poster_path, overview,media_type, comment) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
+    const values = [movie.title, movie.poster_path, movie.overview,movie.media_type,movie.comment];
     console.log(sql);
 
     client.query(sql,values)
@@ -249,8 +249,8 @@ function deleteMovie(req,res){
 
 function updateMovie(req,res) {
     const id = req.params.id;
-    const sql = `UPDATE my_movies  SET title=$1, vote_average=$2, summary=$3, media_type=$4 WHERE id=${id} RETURNING *`;
-    const values = [req.body.title,req.body.vote_average,req.body.summary,req.body.media_type];
+    const sql = `UPDATE my_movies  SET title=$1, poster_path=$2, overview=$3, media_type=$4, comment=$5 WHERE id=${id} RETURNING *`;
+    const values = [req.body.title,req.body.poster_path,req.body.overview,req.body.media_type,req.body.comment];
     client.query(sql,values)
     .then((data)=>{
         res.status(200).send(data.rows);
